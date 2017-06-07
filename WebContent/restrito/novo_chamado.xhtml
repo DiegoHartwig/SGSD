@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Service Desk</title>
+	<h:outputStylesheet library="css" name="estilo.css" />
+</h:head>
+<h:body>
+
+	<!-- Loading -->
+	<p:ajaxStatus onstart="PF('statusDialog').show()"
+		onsuccess="PF('statusDialog').hide()" />
+	<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+		closable="false" resizable="false" showHeader="false">
+		<p:graphicImage name="/img/loader.gif" />
+	</p:dialog>
+
+	<h:form id="frmNovoChamado" acceptcharset="ISO-8859-1">
+
+		<div id="conteudo">
+
+			<p:panel id="painelNovo">
+
+				<p:focus context="painelNovo" />
+
+				<p:messages autoUpdate="true" />
+
+				<p:panelGrid columns="2" styleClass="semBorda">
+
+					<f:facet name="header">
+						<h:outputText value="Novo Chamado" />
+					</f:facet>
+
+					<p:outputLabel value="Solicitante: *" />
+					<h:panelGroup>
+						<p:selectOneMenu id="selecionaUsuario"
+							value="#{chamadoBean.usuario_id}" panelStyle="width:180px"
+							effect="fade" style="width:160px" filter="true"
+							filterMatchMode="startsWith">
+							<f:selectItems value="#{chamadoBean.carregarUsuarios}" var="usu"
+								size="30" />
+						</p:selectOneMenu>
+					</h:panelGroup>
+
+					<p:outputLabel value="Técnico: *" />
+					<h:panelGroup>
+						<p:selectOneMenu id="selecionaTecnico"
+							value="#{chamadoBean.tecnico_id}" panelStyle="width:180px"
+							effect="fade" style="width:160px" filter="true"
+							filterMatchMode="startsWith">
+							<f:selectItems value="#{chamadoBean.carregarTecnicos}" var="tec"
+								size="30"></f:selectItems>
+						</p:selectOneMenu>
+					</h:panelGroup>
+
+					<p:outputLabel value="Assunto:" for="titulo" />
+					<p:inputText id="titulo" size="40"
+						value="#{chamadoBean.chamado.titulo}"
+						placeholder="Título do chamado" required="true"
+						requiredMessage="Informe o título do chamado!">
+						<f:validateLength minimum="8" maximum="40" />
+					</p:inputText>
+
+					<p:outputLabel value="Descrição:" />
+					<p:inputTextarea rows="4" cols="42" counter="display"
+						maxlength="200" counterTemplate="{0} caracteres restantes."
+						autoResize="true" id="obs"
+						value="#{chamadoBean.chamado.descricao}"
+						placeholder="Resumo do problema" />
+					<h:outputText />
+					<h:outputText id="display" />
+
+					<p:outputLabel value="Equipamento:" for="equipamento" />
+					<p:inputText id="equipamento" size="40"
+						value="#{chamadoBean.chamado.equipamento}"
+						placeholder="Descrição do equipamento" />
+
+					<p:outputLabel for="tipo" value="Tipo:" />
+					<p:selectOneMenu id="tipo" value="#{chamadoBean.chamado.tipo}"
+						style="width:125px">
+						<f:selectItem itemLabel="Solicitação" itemValue="Solicitacao" />
+						<f:selectItem itemLabel="Incidente" itemValue="Incidente" />
+					</p:selectOneMenu>
+
+					<p:outputLabel for="status" value="Status:" />
+					<p:selectOneMenu id="status" value="#{chamadoBean.chamado.status}">
+						<f:selectItem itemLabel="Em Aberto" itemValue="Em Aberto" />
+						<f:selectItem itemLabel="Em Andamento" itemValue="Em Andamento" />
+					</p:selectOneMenu>
+
+					<p:commandButton value="Salvar" icon="ui-icon-circle-check"
+						actionListener="#{chamadoBean.addChamado}"
+						process="frmNovoChamado" update="@form" />
+
+				</p:panelGrid>
+
+			</p:panel>
+
+		</div>
+
+	</h:form>
+
+</h:body>
+
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Service Desk</title>
+	<h:outputStylesheet library="css" name="estilo.css" />	
+	<style>
+.ui-growl {
+	position: fixed;
+	top: 15%;
+	right: 35%;
+	width: 300px;
+}
+</style>
+</h:head>
+<script type='text/javascript'>
+	(function()	{
+	if( window.localStorage ){
+		if( !localStorage.getItem( 'firstLoad' ) )	{
+			localStorage[ 'firstLoad' ] = true;
+			window.location.reload();
+		}else
+			localStorage.removeItem( 'firstLoad' );
+			}
+		})();
+</script>
+
+<h:body>
+	<!-- begin header -->
+	<div class="cabecalho">
+		<div class="logo">
+			<p:graphicImage name="/img/SGSD.png" style="width:140px;" />
+		</div>
+		<div class="menu">
+			<!-- botão login -->
+			<h:outputLink value="javascript:void(0)" onclick="PF('dlg').show();"
+				title="Login">
+				<p:graphicImage name="/img/login.png" style="padding-top:8px;" />
+			</h:outputLink>
+			<!-- end botão login -->
+		</div>
+	</div>
+	<!-- end header -->
+
+	<div class="banner">
+		<p:graphicImage name="/img/banner.png"
+			style="width:100%; height:100%; 
+		bottom: 0; left: 0; right:0; overflow: auto; position: absolute;" />
+	</div>
+
+	<div class="login">
+		<h:form>
+			<!-- Loading -->
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()" />
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+				closable="false" resizable="false" showHeader="false">
+				<p:graphicImage name="/img/loader.gif" />
+			</p:dialog>
+
+			<p:growl id="growl" sticky="true" life="3000" />
+
+			<p:dialog header="Login" widgetVar="dlg" resizable="false"
+				modal="true" closeOnEscape="true">
+				<h:panelGrid columns="1" cellpadding="5">
+					<p:inputText id="login" value="#{tecBean.tecnico.login}"
+						required="true" label="Campo Login" size="35"
+						placeholder="login do técnico" />
+
+					<p:password id="senha" value="#{tecBean.tecnico.senha}" required="true"
+						label="Campo Senha" size="35" placeholder="Senha" />
+
+					<f:facet name="footer">
+						<p:commandButton value="Entrar" update="growl"
+							action="#{tecBean.logar}" icon="ui-icon-key"
+							oncomplete="handleLoginRequest(xhr, status, args)" />
+					</f:facet>
+				</h:panelGrid>
+			</p:dialog>
+
+			<p:remoteCommand autoRun="true" oncomplete="PF('dlg').show();" />
+		</h:form>
+	</div>
+
+	<script type="text/javascript">
+		function handleLoginRequest(xhr, status, args) {
+			if (args.validationFailed || !args.loggedIn) {
+				PF('dlg').jq.effect("shake", {
+					times : 5
+				}, 100);
+			} else {
+				PF('dlg').hide();
+				$('#loginLink').fadeOut();
+			}
+		}
+	</script>
+
+	<!-- begin footer -->
+	<div class="rodape">
+		<p>
+			Sistema de Gerenciamento de Service Desk<br></br> Diego Hartwig -
+			2017
+		</p>
+	</div>
+	<!-- end footer -->
+
+</h:body>
+
+</html>

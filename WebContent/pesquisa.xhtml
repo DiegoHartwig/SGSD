@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Service Desk</title>
+	<h:outputStylesheet library="css" name="estilo.css" />
+</h:head>
+
+<h:body>
+	<!-- begin header -->
+	<div
+		style="width: 100%; line-height: 15px; background: #296ad4; color: #fff;">
+		<p:graphicImage name="/img/SGSD.png" style="width:120px; padding:5px;" />
+	</div>
+	<!-- end header -->
+
+	<!-- Loading -->
+	<p:ajaxStatus onstart="PF('statusDialog').show()"
+		onsuccess="PF('statusDialog').hide()" />
+	<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+		closable="false" resizable="false" showHeader="false">
+		<p:graphicImage name="/img/loader.gif" />
+	</p:dialog>
+
+	<h:form id="frmNovoSetor" acceptcharset="ISO-8859-1">
+
+		<p:panel id="painelPesquisa">
+
+			<p:focus context="painelPesquisa" />
+			<p:messages id="messages" autoUpdate="true" closable="true" />
+
+			<p:fieldset legend="Pesquisa de Satisfação"
+				style="margin-bottom:20px; width:510px;">
+
+				<p:panelGrid columns="1" styleClass="semBorda">
+
+					<p:outputLabel
+						value="1 - Como você avalia o atendimento realizado pela equipe do Service Desk?"
+						for="questao1" />
+					<p:selectOneMenu id="questao1"
+						value="#{pesquisaBean.pesquisa.questao1}">
+						<f:selectItem itemLabel="Excelente" itemValue="Excelente" />
+						<f:selectItem itemLabel="Bom" itemValue="Bom" />
+						<f:selectItem itemLabel="Regular" itemValue="Regular" />
+						<f:selectItem itemLabel="Ruim" itemValue="Ruim" />
+					</p:selectOneMenu>
+
+					<p:outputLabel />
+
+
+					<p:outputLabel
+						value="2 - Como você avalia o tempo que foi realizado o atendimento?"
+						for="questao2" />
+					<p:selectOneMenu id="questao2"
+						value="#{pesquisaBean.pesquisa.questao2}">
+						<f:selectItem itemLabel="Rápido" itemValue="Rápido" />
+						<f:selectItem itemLabel="Regular" itemValue="Regular" />
+						<f:selectItem itemLabel="Lento" itemValue="Lento" />
+					</p:selectOneMenu>
+
+					<p:outputLabel />
+
+					<p:outputLabel
+						value="3 - Como você avalia o nível de conhecimento da equipe?:"
+						for="questao3" />
+					<p:selectOneMenu id="questao3"
+						value="#{pesquisaBean.pesquisa.questao3}">
+						<f:selectItem itemLabel="Excelente" itemValue="Excelente" />
+						<f:selectItem itemLabel="Bom" itemValue="Bom" />
+						<f:selectItem itemLabel="Regular" itemValue="Regular" />
+						<f:selectItem itemLabel="Ruim" itemValue="Ruim" />
+					</p:selectOneMenu>
+
+					<p:outputLabel />
+
+					<p:outputLabel
+						value="4 - Como você avalia a cortesia e profissionalismo da equipe?:"
+						for="questao4" />
+					<p:selectOneMenu id="questao4"
+						value="#{pesquisaBean.pesquisa.questao4}">
+						<f:selectItem itemLabel="Excelente" itemValue="Excelente" />
+						<f:selectItem itemLabel="Bom" itemValue="Bom" />
+						<f:selectItem itemLabel="Regular" itemValue="Regular" />
+						<f:selectItem itemLabel="Ruim" itemValue="Ruim" />
+					</p:selectOneMenu>
+
+					<p:outputLabel />
+
+					<p:outputLabel
+						value="5 - Na sua opinião, como podemos melhorar o atendimento do Service Desk?" />
+					<p:inputTextarea rows="4" cols="42" counter="display"
+						maxlength="200" counterTemplate="{0} caracteres restantes."
+						autoResize="true" id="obs"
+						value="#{pesquisaBean.pesquisa.questao5}"
+						placeholder="Sua opinião é muito importante para nós" />
+					<h:outputText id="display" />
+				</p:panelGrid>
+
+			</p:fieldset>
+
+		</p:panel>
+
+		<p:toolbar>
+			<p:toolbarGroup align="left">
+				<p:commandButton value="Enviar" icon="ui-icon-circle-check"
+					actionListener="#{pesquisaBean.addPesquisa}" ajax="false"
+					update="@form" />
+			</p:toolbarGroup>
+		</p:toolbar>
+	</h:form>
+
+</h:body>
+</html>
+
+

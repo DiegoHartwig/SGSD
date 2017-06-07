@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Service Desk</title>
+	<h:outputStylesheet library="css" name="estilo.css" />
+	<style>
+.ui-growl {
+	position: fixed;
+	top: 15%;
+	right: 35%;
+	width: 300px;
+}
+</style>
+
+</h:head>
+<h:body>
+
+	<!-- begin header -->
+	<div
+		style="width: 100%; line-height: 15px; background: #296ad4; color: #fff;">
+		<p:graphicImage name="/img/SGSD.png" style="width:120px; padding:5px;" />
+	</div>	
+	<!-- end header -->
+
+	<!-- begin menu -->
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Chamados" url="/restrito/chamados.xhtml"
+				icon="ui-icon-lightbulb" />
+			<p:menuitem value="Usuários" url="/restrito/usuarios.xhtml"
+				icon="	ui-icon-person" />
+			<p:menuitem value="Técnicos" url="/restrito/tecnicos.xhtml"
+				icon="ui-icon-wrench" />
+			<p:menuitem value="Setores" url="/restrito/setores.xhtml"
+				icon="ui-icon-home" />
+			<p:menuitem value="Equipes" url="/restrito/equipes.xhtml"
+				icon="ui-icon-contact" />
+			<p:menuitem value="Configurações" url="/restrito/config.xhtml"
+				icon="ui-icon-gear " />
+			<p:menuitem value="Avaliações" url="/restrito/avaliacoes.xhtml"
+				icon="ui-icon-clipboard" />
+			<p:menuitem value="Sair" action="#{tecBean.logout}"
+				icon="ui-icon-power" />			
+			<f:facet name="options">
+				<h:outputText value="Olá, " />
+				<h:outputText value="#{tecBean.usuarioLog}" />											
+			</f:facet>	
+		</p:menubar>
+	</h:form>
+	<!--end menu -->
+
+	<!-- Loading -->
+	<p:ajaxStatus onstart="PF('statusDialog').show()"
+		onsuccess="PF('statusDialog').hide()" />
+	<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+		closable="false" resizable="false" showHeader="false">
+		<p:graphicImage name="/img/loader.gif" />
+	</p:dialog>
+
+	<h:form id="frmNovoTecnico" acceptcharset="ISO-8859-1">
+
+		<p:accordionPanel>
+
+			<p:tab title="Novo Técnico">
+
+				<p:panel id="painelTecnico">
+
+					<p:focus context="painelTecnico" />
+
+					<p:messages id="messages" autoUpdate="true" closable="true" />
+
+					<p:panelGrid columns="6" styleClass="semBorda">
+						<!-- Campo Nome -->
+						<p:outputLabel value="Nome Completo:" for="nome" />
+						<p:inputText id="nome" value="#{tecBean.tecnico.nome}"
+							placeholder="Nome Completo" size="30" maxlength="30"
+							required="true" requiredMessage="Digite o nome do técnico!">
+							<f:validateLength minimum="8" maximum="30" />
+						</p:inputText>
+
+						<!-- Campo Login -->
+						<p:outputLabel value="Login:" for="login" />
+						<p:inputText id="login" value="#{tecBean.tecnico.login}"
+							placeholder="login do Técnico" size="30" maxlength="30"
+							required="true" requiredMessage="Digite o login!">
+							<f:validateLength minimum="10" maximum="30" />
+						</p:inputText>
+
+						<!-- Campo Senha -->
+						<p:outputLabel value="Senha:" for="pwd1" />
+						<p:password id="pwd1" value="#{tecBean.tecnico.senha}"
+							placeholder="Digite uma senha" size="30" maxlength="30"
+							required="true" requiredMessage="Digite uma senha!" match="pwd2"
+							feedback="true" promptLabel="Nivel da Senha"
+							weakLabel="Senha Fraca" goodLabel="Senha Boa"
+							strongLabel="Excelente">
+							<f:validateLength minimum="10" maximum="30" />
+						</p:password>
+
+						<!-- Campo Confirma Senha -->
+						<p:outputLabel value="Confirme a Senha:" for="pwd2" />
+						<p:password id="pwd2" placeholder="Digite novamente" size="30"
+							maxlength="30" required="true"
+							requiredMessage="Digite a mesma senha novamente!" feedback="true"
+							promptLabel="Nivel da Senha" weakLabel="Senha Fraca"
+							goodLabel="Senha Boa" strongLabel="Excelente">
+							<f:validateLength minimum="10" maximum="30" />
+						</p:password>
+
+						<!-- Campo Email -->
+						<p:outputLabel value="Email:" for="email" />
+						<p:inputText id="email" value="#{tecBean.tecnico.email}"
+							placeholder="ex: email@dominio.com" size="30" maxlength="30"
+							required="true" validatorMessage="Email Inválido!">
+							<f:validateRegex pattern="[a-zA-Z0-9\-\_\.]+@[a-zA-Z0-9\-\_\.]+" />
+						</p:inputText>
+
+						<!-- Campo Telefone -->
+						<p:outputLabel value="Telefone:" for="fone" />
+						<p:inputMask mask="(99) 9999-9999" id="fone"
+							value="#{tecBean.tecnico.telefone}"
+							placeholder="ex: (41 - 9999-9999)" size="30" />
+
+
+						<!-- Campo cargo -->
+						<p:outputLabel value="Cargo:" for="cargo" />
+						<p:inputText id="cargo" value="#{tecBean.tecnico.profissao}"
+							placeholder="Cargo do Técnico" size="30" />
+
+						<!-- Campo Equipe -->
+						<h:outputLabel value="Equipe:" />
+						<p:selectOneMenu id="selecionaEquipe" value="#{tecBean.equipe_id}"
+							panelStyle="width:180px" effect="fade" style="width:160px"
+							filter="true" filterMatchMode="startsWith">
+
+							<f:selectItems value="#{tecBean.carregarEquipes}" var="equip"
+								size="30"></f:selectItems>
+						</p:selectOneMenu>
+
+					</p:panelGrid>
+
+					<p:toolbar>
+						<p:toolbarGroup align="left">
+							<p:commandButton value="Salvar" icon="ui-icon-circle-check"
+								actionListener="#{tecBean.addTecnico}" ajax="false" />
+
+							<p:commandButton value="Novo"
+								actionListener="#{tecBean.novoTecnico}" ajax="false"
+								action="tecnicos?faces-redirect=true" immediate="true"
+								icon="ui-icon-circle-plus" />
+
+						</p:toolbarGroup>
+					</p:toolbar>
+
+				</p:panel>
+			</p:tab>
+		</p:accordionPanel>
+	</h:form>
+
+	<!-- begin form Listar Tecnicos -->
+	<h:form>
+		<p:accordionPanel>
+			<p:tab title="Técnicos">
+				<p:panel id="painelTecnicos">
+					<p:dataTable id="listagem_tecnicos" value="#{tecBean.tecnicos}"
+						var="t" draggableColumns="true" style="margin-bottom:0"
+						paginator="true" rows="3"
+						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+						rowsPerPageTemplate="3,10,15" paginatorPosition="bottom"
+						selection="#{tecBean.tecnicoSelecionado}"
+						selectionMode="single" rowKey="#{t.id}"
+						paginatorAlwaysVisible="true"
+						currentPageReportTemplate="{totalRecords} Técnicos cadastrados" 
+						emptyMessage="Nenhum Técnico cadastrado.">
+
+						<p:column headerText="" style="width:26px;">
+							<p:commandButton icon="ui-icon-pencil" action="editar_tecnico"
+								actionListener="#{tecBean.selecionarTecnico}"
+								style="width:25px;" />
+						</p:column>
+
+						<p:column headerText="" style="width:26px;">
+							<p:commandButton actionListener="#{tecBean.deleteTecnico}"
+								update="listagem_tecnicos" icon="ui-icon-trash"
+								style="width:25px;">
+								<p:confirm header="Exclusão de Técnico"
+									message="Deseja mesmo excluir este Técnico?"
+									icon="ui-icon-alert"></p:confirm>
+							</p:commandButton>
+						</p:column>
+
+						<p:column headerText="Código" style="width:50px;">
+							<h:outputText value="#{t.id}" />
+						</p:column>
+
+						<p:column headerText="Nome" style="width:150px;"
+							filterBy="#{t.nome}">
+							<h:outputText value="#{t.nome}" />
+						</p:column>
+
+						<p:column headerText="Telefone" style="width:100px;">
+							<h:outputText value="#{t.telefone}" />
+						</p:column>
+
+						<p:column headerText="Email" style="width:180px;">
+							<h:outputText value="#{t.email}" />
+						</p:column>
+						<p:column headerText="Cargo" style="width:150px;"
+							filterBy="#{t.profissao}">
+							<h:outputText value="#{t.profissao}" />
+						</p:column>
+
+						<p:column headerText="Equipe" style="width:100px;"
+							filterBy="#{t.equipe.descricao}">
+							<h:outputText value="#{t.equipe.descricao}" />
+						</p:column>
+
+					</p:dataTable>
+
+					<p:confirmDialog global="true" showEffect="fade"
+						hideEffect="explode">
+						<p:commandButton value="SIM" type="button"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check"></p:commandButton>
+						<p:commandButton value="NÃO" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close"></p:commandButton>
+					</p:confirmDialog>
+				</p:panel>
+			</p:tab>
+		</p:accordionPanel>
+	</h:form>
+</h:body>
+</html>

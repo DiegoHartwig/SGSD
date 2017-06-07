@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Service Desk</title>
+	<h:outputStylesheet library="css" name="estilo.css" />
+</h:head>
+<h:body>
+	<!-- begin header -->
+	<div
+		style="width: 100%; line-height: 15px; background: #296ad4; color: #fff;">
+		<p:graphicImage name="/img/SGSD.png" style="width:120px; padding:5px;" />
+	</div>	
+	<!-- end header -->
+
+	<!-- begin menu -->
+	<h:form>
+		<p:menubar>
+			<p:menuitem value="Chamados" url="/restrito/chamados.xhtml"
+				icon="ui-icon-lightbulb" />
+			<p:menuitem value="Usuários" url="/restrito/usuarios.xhtml"
+				icon="	ui-icon-person" />
+			<p:menuitem value="Técnicos" url="/restrito/tecnicos.xhtml"
+				icon="ui-icon-wrench" />
+			<p:menuitem value="Setores" url="/restrito/setores.xhtml"
+				icon="ui-icon-home" />
+			<p:menuitem value="Equipes" url="/restrito/equipes.xhtml"
+				icon="ui-icon-contact" />
+			<p:menuitem value="Configurações" url="/restrito/config.xhtml"
+				icon="ui-icon-gear " />
+			<p:menuitem value="Avaliações" url="/restrito/avaliacoes.xhtml"
+				icon="ui-icon-clipboard" />
+			<p:menuitem value="Sair" action="#{tecBean.logout}"
+				icon="ui-icon-power" />			
+			<f:facet name="options">
+				<h:outputText value="Olá, " />
+				<h:outputText value="#{tecBean.usuarioLog}" />											
+			</f:facet>	
+		</p:menubar>
+	</h:form>
+	<!--end menu -->
+
+	<!-- Loading -->
+	<p:ajaxStatus onstart="PF('statusDialog').show()"
+		onsuccess="PF('statusDialog').hide()" />
+	<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+		closable="false" resizable="false" showHeader="false">
+		<p:graphicImage name="/img/loader.gif" />
+	</p:dialog>
+
+	<h:form id="frmConfig" acceptcharset="ISO-8859-1">
+
+		<p:accordionPanel>
+
+			<p:tab title="Configurar Parâmetros de envio de e-mail">
+
+				<p:panel id="painelEmail">
+
+					<p:focus context="painelEmail" />
+
+					<p:messages id="messages" autoUpdate="true" closable="true" />
+
+					<p:panelGrid columns="1" styleClass="semBorda">
+
+						<p:outputLabel value="Id:" for="id" />
+						<p:inputText id="id"
+							value="#{emailConfigBean.emailConfig.id}" placeholder="1"
+							size="5" maxlength="1" required="true"
+							requiredMessage="Código deve ser preenchido">
+							<f:validateLength minimum="1" maximum="1" />
+						</p:inputText>
+
+						<p:outputLabel value="Email:" for="email" />
+						<p:inputText id="email"
+							value="#{emailConfigBean.emailConfig.email}"
+							placeholder="Email que irá autenticar" size="40" maxlength="50"
+							required="true" validatorMessage="Email Inválido!">
+							<f:validateRegex pattern="[a-zA-Z0-9\-\_\.]+@[a-zA-Z0-9\-\_\.]+" />
+						</p:inputText>
+
+						<p:outputLabel />
+
+						<p:outputLabel value="Senha:" />
+						<p:password id="pwd1" value="#{emailConfigBean.emailConfig.senha}"
+							placeholder="Digite a senha do email" size="40" maxlength="50"
+							required="true" requiredMessage="Digite a senha!">
+							<f:validateLength minimum="10" maximum="50" />
+						</p:password>
+
+						<p:outputLabel />
+
+						<p:outputLabel value="Configuração de SMTP:" for="smtp" />
+						<p:inputText id="smtp" value="#{emailConfigBean.emailConfig.smtp}"
+							placeholder="ex: smtp.googlemail.com" size="30" maxlength="30"
+							required="true" requiredMessage="Digite o SMTP!">
+							<f:validateLength minimum="2" maximum="30" />
+						</p:inputText>
+
+						<p:outputLabel value="Porta SMTP:" for="portasmtp" />
+						<p:inputText id="portasmtp"
+							value="#{emailConfigBean.emailConfig.porta}" placeholder="465"
+							size="5" maxlength="5" required="true"
+							requiredMessage="Digite a porta SMTP, ex: 465!">
+							<f:validateLength minimum="2" maximum="30" />
+						</p:inputText>
+
+					</p:panelGrid>
+
+					<p:toolbar>
+						<p:toolbarGroup align="left">
+							<p:commandButton value="Salvar" icon="ui-icon-circle-check"
+								actionListener="#{emailConfigBean.addEmailConfig}" ajax="false" />
+						</p:toolbarGroup>
+					</p:toolbar>
+				</p:panel>
+			</p:tab>
+		</p:accordionPanel>
+	</h:form>
+
+	<!-- begin form listar configurações de envio de email -->
+	<h:form>
+		<p:accordionPanel>
+			<p:tab title="Configurações">
+				<p:panel id="painelSetores">
+
+					<p:dataTable id="listagem_config"
+						value="#{emailConfigBean.configs}" var="e"
+						emptyMessage="Nenhum email configurado para autenticação.">
+
+						<p:column headerText="" style="width:26px;">
+							<p:commandButton icon="ui-icon-pencil" action="editar_config"
+								actionListener="#{emailConfigBean.selecionaEmailConfig}"
+								style="width:25px;" />
+						</p:column>
+
+						<p:column headerText="" style="width:26px;">
+							<p:commandButton actionListener="#{emailConfigBean.deleteConfig}"
+								update="listagem_config" icon="ui-icon-trash" title="Apagar"
+								style="width:25px;">
+								<p:confirm header="Exclusão de configuração de email"
+									message="Deseja mesmo excluir esta configuração?"
+									icon="ui-icon-alert"></p:confirm>
+							</p:commandButton>
+						</p:column>
+
+						<p:column headerText="Código" style="width:40px;">
+							<h:outputText value="#{e.id}" />
+						</p:column>
+						<p:column headerText="Email">
+							<h:outputText value="#{e.email}" />
+						</p:column>
+						<p:column headerText="smtp">
+							<h:outputText value="#{e.smtp}" />
+						</p:column>
+						<p:column headerText="porta">
+							<h:outputText value="#{e.porta}" />
+						</p:column>
+
+					</p:dataTable>
+
+					<p:confirmDialog global="true" showEffect="fade"
+						hideEffect="explode">
+						<p:commandButton value="SIM" type="button"
+							styleClass="ui-confirmdialog-yes" icon="ui-icon-check"></p:commandButton>
+						<p:commandButton value="NÃO" type="button"
+							styleClass="ui-confirmdialog-no" icon="ui-icon-close"></p:commandButton>
+					</p:confirmDialog>
+				</p:panel>
+			</p:tab>
+		</p:accordionPanel>
+
+	</h:form>
+</h:body>
+</html>
+
+

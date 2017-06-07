@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<title>Service Desk</title>
+	<h:outputStylesheet library="css" name="estilo.css" />
+</h:head>
+<h:body>
+
+	<!-- Loading -->
+	<p:ajaxStatus onstart="PF('statusDialog').show()"
+		onsuccess="PF('statusDialog').hide()" />
+	<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
+		closable="false" resizable="false" showHeader="false">
+		<p:graphicImage name="/img/loader.gif" />
+	</p:dialog>
+
+
+	<h:form id="frmAtualizarChamado" acceptcharset="ISO-8859-1">
+
+		<div id="conteudo">
+
+			<p:panel id="painelUsuario">
+
+				<p:messages autoUpdate="true" />
+
+				<p:accordionPanel>
+					<p:tab title="Atualizar Informações do Chamado">
+						<p:panelGrid columns="2">
+							<p:outputLabel for="status" value="Status:" />
+							<p:selectOneMenu id="status"
+								value="#{chamadoBean.chamado.status}">
+								<f:selectItem itemLabel="Em Aberto" itemValue="Em Aberto" />
+								<f:selectItem itemLabel="Em Andamento" itemValue="Em Andamento" />
+								<f:selectItem itemLabel="Concluido" itemValue="Concluido" />
+							</p:selectOneMenu>
+
+							<p:outputLabel value="Solicitante:" for="solicitante" />
+							<h:panelGroup>
+								<p:inputText id="solicitante" size="40"
+									value="#{chamadoBean.chamado.usuario.nome}" readonly="true"
+									style="background-color:#D3D3D3;" />
+							</h:panelGroup>
+
+							<p:outputLabel value="Técnico:" for="tecnico" />
+							<h:panelGroup>
+								<p:inputText id="tecnico" size="40"
+									value="#{chamadoBean.chamado.tecnico.nome}" readonly="true"
+									style="background-color:#D3D3D3;" />
+							</h:panelGroup>
+
+							<p:outputLabel value="Título:" for="titulo" />
+							<p:inputText id="titulo" size="40"
+								value="#{chamadoBean.chamado.titulo}"
+								placeholder="Título do chamado"></p:inputText>
+
+							<p:outputLabel value="Descrição:" />
+							<p:inputTextarea rows="4" cols="42" counter="display"
+								maxlength="200" counterTemplate="{0} caracteres restantes."
+								autoResize="true" id="obs"
+								value="#{chamadoBean.chamado.descricao}"
+								placeholder="Resumo do problema" />
+							<h:outputText />
+							<h:outputText id="display" />
+
+							<p:outputLabel value="Equipamento:" for="equipamento" />
+							<p:inputText id="equipamento" size="40"
+								value="#{chamadoBean.chamado.equipamento}"
+								placeholder="Descrição do equipamento" />
+
+							<p:outputLabel for="tipo" value="Tipo:" />
+							<p:selectOneMenu id="tipo" value="#{chamadoBean.chamado.tipo}"
+								style="width:125px">
+								<f:selectItem itemLabel="Solicitação" itemValue="Solicitação" />
+								<f:selectItem itemLabel="Incidente" itemValue="Incidente" />
+							</p:selectOneMenu>
+
+
+						</p:panelGrid>
+					</p:tab>
+
+					<p:tab title="Acompanhamento do Chamado">
+						<h:panelGrid columns="1">
+							<p:editor id="acompanhamento"
+								value="#{chamadoBean.chamado.acompanhamento}" width="400" />
+							<p:outputLabel />
+						</h:panelGrid>
+					</p:tab>
+
+					<p:tab title="Solução">
+						<h:panelGrid columns="1">
+							<p:inputTextarea rows="4" cols="42" 
+								maxlength="200" 
+								autoResize="true" id="solucao"
+								value="#{chamadoBean.chamado.solucao}"
+								placeholder="Tarefas executadas" />
+						</h:panelGrid>
+					</p:tab>
+
+				</p:accordionPanel>
+
+				<h:panelGrid columns="1">
+					<p:commandButton value="Atualizar" icon="ui-icon-circle-check"
+						actionListener="#{chamadoBean.updateChamado}"
+						process="frmAtualizarChamado" update="@form" />
+				</h:panelGrid>
+
+			</p:panel>
+		</div>
+
+	</h:form>
+
+</h:body>
+
+</html>
