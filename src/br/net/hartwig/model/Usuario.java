@@ -12,9 +12,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-/**  
- * SGSD 2017
- * Author: Diego Michel Hartwig
+/**
+ * @author Diego Hartwig
+ * @since 1.0.2017
+ * @version 1.2.2017
  */
 @Entity
 @Table(name = "usuario")
@@ -26,7 +27,7 @@ public class Usuario {
 	private int id;
 
 	@Column(name = "nome")
-	private String nome;	
+	private String nome;
 
 	@Column(name = "email")
 	private String email;
@@ -61,7 +62,7 @@ public class Usuario {
 
 	public void setNome(String nome) {
 		this.nome = nome;
-	}	
+	}
 
 	public String getEmail() {
 		return email;

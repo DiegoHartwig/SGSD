@@ -10,36 +10,37 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**  
- * SGSD 2017
- * Author: Diego Michel Hartwig
+/**
+ * @author Diego Hartwig
+ * @since 1.0.2017
+ * @version 1.2.2017
  */
 @Entity
-@Table(name="pesquisa")
+@Table(name = "pesquisa")
 public class Pesquisa {
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
-	private int id;	
-	
-	@Column(name="Questao1")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
+	private int id;
+
+	@Column(name = "Questao1")
 	private String questao1;
-	
-	@Column(name="Questao2")
+
+	@Column(name = "Questao2")
 	private String questao2;
-	
-	@Column(name="Questao3")
+
+	@Column(name = "Questao3")
 	private String questao3;
-	
-	@Column(name="Questao4")
+
+	@Column(name = "Questao4")
 	private String questao4;
-	
-	@Column(name="Questao5")
+
+	@Column(name = "Questao5")
 	private String questao5;
-	
-	@Column(name = "data_pesquisa")	
-	private Calendar data_pesquisa = Calendar.getInstance();	
+
+	@Column(name = "data_pesquisa")
+	private Calendar data_pesquisa = Calendar.getInstance();
 
 	public int getId() {
 		return id;
@@ -96,7 +97,5 @@ public class Pesquisa {
 	public void setData_pesquisa(Calendar data_pesquisa) {
 		this.data_pesquisa = data_pesquisa;
 	}
-	
 
 }
-

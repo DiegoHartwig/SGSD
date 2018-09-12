@@ -9,7 +9,7 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
@@ -32,24 +32,21 @@ import br.net.hartwig.model.Chamado;
 import br.net.hartwig.model.Tecnico;
 import br.net.hartwig.model.Usuario;
 
-/**  
- * SGSD 2017
- * Author: Diego Michel Hartwig
+/**
+ * @author Diego Hartwig
+ * @since 1.0.2017
+ * @version 1.2.2017
  */
 @ManagedBean(name = "chamadoBean")
-@SessionScoped
+@RequestScoped
 public class ChamadoBean implements Serializable {
 
 	private static final long serialVersionUID = -6667994166226498861L;
-	// Instanciando objeto privado do tipo Chamado
 	private Chamado chamado = new Chamado();
-	//DataModel chamados do tipo Chamado
 	private DataModel<Chamado> chamados;
 	private int usuario_id;
 	private int tecnico_id;
-	//Variável utilizada no DataTable para filtrar chamados
 	private List<Chamado> chamadosFiltrados;
-	//Variável que armazena o chamado selecionado no dataTable
 	private Chamado chamadoSelecionado;
 
 	public Chamado getChamado() {
@@ -79,26 +76,22 @@ public class ChamadoBean implements Serializable {
 	public void selecionarChamado() {
 		this.chamado = chamados.getRowData();
 	}
-	
-	//getChamados
-	//Método que retorna uma lista no datamodel
+
 	public DataModel<Chamado> getChamados() {
-		//Instanciando o ChamadoDAO
+
 		ChamadoDAO dao = new ChamadoDAO();
 
 		try {
-			//Recebendo lista de chamados do método GetALL do ChamadoDAO
-			List<Chamado> lista = dao.GetALL();
-			//Setando datamodel chamados, vindo de lista
+
+			List<Chamado> lista = dao.getAll();
 			chamados = new ListDataModel<Chamado>(lista);
 		} catch (Exception e) {
 
 		}
-		//Retorna o datamodel chamados
+
 		return chamados;
 	}
-	
-	//setChamados
+
 	public void setChamados(DataModel<Chamado> chamados) {
 		this.chamados = chamados;
 	}
@@ -109,7 +102,7 @@ public class ChamadoBean implements Serializable {
 
 	public void setChamadosFiltrados(List<Chamado> chamadosFiltrados) {
 		this.chamadosFiltrados = chamadosFiltrados;
-	}	
+	}
 
 	public Chamado getChamadoSelecionado() {
 		return chamadoSelecionado;
@@ -117,65 +110,59 @@ public class ChamadoBean implements Serializable {
 
 	public void setChamadoSelecionado(Chamado chamadoSelecionado) {
 		this.chamadoSelecionado = chamadoSelecionado;
-		
+
 	}
 
-	// Novo Chamado
 	public void novoChamado() {
-		chamado = new Chamado();	
-		
+		chamado = new Chamado();
+
 	}
 
-	// Método Add chamado
 	public String addChamado() {
 		String retorno = "erro";
 		int numero = 0;
+
 		try {
-			// Instanciando ChamadoDAO
+
 			ChamadoDAO dao = new ChamadoDAO();
-			// Instanciando TecnicoDAO
+
 			TecnicoDAO tecnicodao = new TecnicoDAO();
-			// Instanciando UsuarioDAO
+
 			UsuarioDAO usuariodao = new UsuarioDAO();
-			
+
 			EmailConfigDAO emailConfigDao = new EmailConfigDAO();
 
-			chamado.setTecnico(tecnicodao.Get(tecnico_id));
+			chamado.setTecnico(tecnicodao.get(tecnico_id));
 
-			chamado.setUsuario(usuariodao.Get(usuario_id));			
-			
-			// Salvar chamado
-			dao.Salvar(chamado);
-			
-			numero = chamado.getId();	
-			
+			chamado.setUsuario(usuariodao.get(usuario_id));
+
+			dao.salvar(chamado);
+
+			numero = chamado.getId();
+
 			String titulo = chamado.getTitulo();
 			String descricao = chamado.getDescricao();
 			String destinatario = chamado.getUsuario().getEmail();
-			//Pega os parâmetros da tabela de configuração de email e depois seta abaixo
-			String emailAut = emailConfigDao.Get(1).getEmail();
-			String senhaAut = emailConfigDao.Get(1).getSenha();
-			String smtpserver = emailConfigDao.Get(1).getSmtp();			
-			int portasmtp = emailConfigDao.Get(1).getPorta();
-			String emailAutomatico = "Atenção! Este é um email automático enviado pelo Sistema do Service Desk! ";
-			
-			
-			//Envio de email após abertura do chamado
+			String emailAut = emailConfigDao.get(1).getEmail();
+			String senhaAut = emailConfigDao.get(1).getSenha();
+			String smtpserver = emailConfigDao.get(1).getSmtp();
+			int portasmtp = emailConfigDao.get(1).getPorta();
+			String emailAutomatico = "Este Ã© um e-mail automÃ¡tico enviado pelo Sistema do Service Desk - SGSD! ";
+
 			Mensagem mensagem = new Mensagem();
 			mensagem.setEmailAutentica(emailAut);
 			mensagem.setSenhaAutentica(senhaAut);
 			mensagem.setSmtp(smtpserver);
 			mensagem.setPorta(portasmtp);
-			mensagem.setAssunto("Chamado número: "+numero+",  aberto no Service Desk");
-			mensagem.setDescricao("Título: "+titulo+", Descrição do chamado: "+descricao+
-					" - " +emailAutomatico);
+			mensagem.setAssunto("Chamado nÃºmero: " + numero + ",  aberto no Service Desk");
+			mensagem.setDescricao(
+					"TÃ­tulo: " + titulo + ", DescriÃ§Ã£o do chamado: " + descricao + " - " + emailAutomatico);
 			mensagem.setEmaildestino(destinatario);
-			mensagem.EnviarEmail();			
-			
-			// Mensagem de confirmação após salvar o novo chamado
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Chamado Número: "+numero+" aberto com sucesso"));
-			retorno = "chamados";		
-			
+			mensagem.EnviarEmail();
+
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage("Chamado NÃºmero: " + numero + " aberto com sucesso"));
+			retorno = "chamados";
 
 		} catch (Exception ex) {
 
@@ -184,11 +171,13 @@ public class ChamadoBean implements Serializable {
 
 	}
 
-	// Carregar Lista de Usuários
 	public Collection<SelectItem> getCarregarUsuarios() {
 		UsuarioDAO dao = new UsuarioDAO();
+
 		Collection<SelectItem> lista = new ArrayList<SelectItem>();
+
 		lista.add(new SelectItem("-- Selecione o usuario --"));
+
 		List<Usuario> listaUsuario = dao.GetALL();
 
 		for (int i = 0; i < listaUsuario.size(); i++) {
@@ -198,13 +187,15 @@ public class ChamadoBean implements Serializable {
 		return lista;
 	}
 
-	// Carregar lista de Tecnicos
-
 	public Collection<SelectItem> getCarregarTecnicos() {
+
 		TecnicoDAO dao = new TecnicoDAO();
+
 		Collection<SelectItem> lista = new ArrayList<SelectItem>();
+
 		lista.add(new SelectItem("-- Selecione o Tecnico --"));
-		List<Tecnico> listaTecnico = dao.GetALL();
+
+		List<Tecnico> listaTecnico = dao.getAll();
 
 		for (int i = 0; i < listaTecnico.size(); i++) {
 			lista.add(new SelectItem(listaTecnico.get(i).getId(), listaTecnico.get(i).getNome()));
@@ -213,19 +204,18 @@ public class ChamadoBean implements Serializable {
 		return lista;
 	}
 
-	// Delete
 	public String deleteChamado() {
-		//Seta chamado pegando registro atual
+
 		this.chamado = chamados.getRowData();
-		
+
 		String retorno = "erro";
 
 		try {
-			// Instanciando ChamadoDAO
+
 			ChamadoDAO dao = new ChamadoDAO();
-			// Chamando método Delete de ChamadoDAO
-			dao.Delete(chamado);
-			// Mensagem de confirmação após salvar
+
+			dao.delete(chamado);
+
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Chamado deletado com sucesso"));
 			retorno = "listar";
 		} catch (Exception ex) {
@@ -235,113 +225,97 @@ public class ChamadoBean implements Serializable {
 
 	}
 
-	// Update
 	public String updateChamado() {
 		String retorno = "erro";
 
 		try {
-			// Instanciando ChamadoDAO
+
 			ChamadoDAO dao = new ChamadoDAO();
-			// Instanciando TecnicoDAO
-			//TecnicoDAO tecnicodao = new TecnicoDAO();
-			// Instanciando UsuarioDAO
-			//UsuarioDAO usuariodao = new UsuarioDAO();
 
-			//chamado.setTecnico(tecnicodao.Get(tecnico_id));
+			EmailConfigDAO emailConfigDao = new EmailConfigDAO();
 
-			//chamado.setUsuario(usuariodao.Get(usuario_id));	
-			// Chamando método update de ChamadoDAO
-			
-			//Instanciando EmailDAO
-			EmailConfigDAO emailConfigDao = new EmailConfigDAO();		
-			
-			dao.Update(chamado);			
-			
-			String statusChamado = chamado.getStatus();	
-			
-			int numero = chamado.getId();	
-			
-			//Setando parametros do email
+			dao.update(chamado);
+
+			String statusChamado = chamado.getStatus();
+
+			int numero = chamado.getId();
+
 			String titulo = chamado.getTitulo();
 			String solucao = chamado.getSolucao();
 			String destinatario = chamado.getUsuario().getEmail();
-			//Pega os parâmetros da tabela de configuração de email e depois seta abaixo
-			String emailAut = emailConfigDao.Get(1).getEmail();
-			String senhaAut = emailConfigDao.Get(1).getSenha();
-			String smtpserver = emailConfigDao.Get(1).getSmtp();
-			int portasmtp = emailConfigDao.Get(1).getPorta();
+			String emailAut = emailConfigDao.get(1).getEmail();
+			String senhaAut = emailConfigDao.get(1).getSenha();
+			String smtpserver = emailConfigDao.get(1).getSmtp();
+			int portasmtp = emailConfigDao.get(1).getPorta();
 			String pesquisa = ("http://hartwig.net.br:8080/SGSD/pesquisa.xhtml");
-			String emailAutomatico = "Atenção! Este é um email automático enviado pelo Sistema do Service Desk!";
-	
-			
-			//Se foi selecionada a opção concluido então
-			if (statusChamado.equals("Concluido")){
+			String emailAutomatico = "Este Ã© um e-mail automÃ¡tico enviado pelo Sistema de Service Desk - SGSD";
+
+			if (statusChamado.equals("Concluido")) {
 				Mensagem mensagem = new Mensagem();
 				mensagem.setEmailAutentica(emailAut);
 				mensagem.setSenhaAutentica(senhaAut);
 				mensagem.setSmtp(smtpserver);
 				mensagem.setPorta(portasmtp);
-				mensagem.setAssunto("Chamado número: "+numero+",  foi encerrado - Service Desk");
-				mensagem.setDescricao("Olá! Informamos que o chamado número: "+numero+", foi encerrado. Solução do técnico: "+solucao+" - "
-						+ "Por favor preencha a pesquisa de satisfação em: "+pesquisa+"  Muito Obrigado! "+emailAutomatico);
+				mensagem.setAssunto("Chamado nÃºmero: " + numero + ",  foi encerrado - Service Desk");
+				mensagem.setDescricao(
+						"OlÃ¡! Informamos que o chamado nÃºmero: " + numero + ", foi encerrado. SoluÃ§Ã£o do Tecnico: "
+								+ solucao + " - " + "Por favor preencha a pesquisa de satisfaÃ§Ã£o em: " + pesquisa
+								+ "  Muito Obrigado! " + emailAutomatico);
 				mensagem.setEmaildestino(destinatario);
-				mensagem.EnviarEmail();	
-				
-				FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Chamado número "+numero+", encerrado com sucesso!"));
-				
+				mensagem.EnviarEmail();
 
-			}else{
-				if(statusChamado.equals("Em Andamento")){
-					
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage("Chamado nÃºmero " + numero + ", encerrado com sucesso!"));
+
+			} else {
+				if (statusChamado.equals("Em Andamento")) {
+
 					Mensagem mensagem = new Mensagem();
 					mensagem.setEmailAutentica(emailAut);
 					mensagem.setSenhaAutentica(senhaAut);
 					mensagem.setSmtp(smtpserver);
 					mensagem.setPorta(portasmtp);
-					mensagem.setAssunto("Chamado número: "+numero+",  está em andamento");
-					mensagem.setDescricao("Olá! Informamos que o chamado número: "+numero+","+titulo+", está em atendimento pela equipe do Service Desk! "
-										+emailAutomatico);
+					mensagem.setAssunto("Chamado nÃºmero: " + numero + ",  estÃ¡ em andamento");
+					mensagem.setDescricao("OlÃ¡! Informamos que o chamado nÃºmero: " + numero + "," + titulo
+							+ ", estÃ¡ em atendimento pela equipe do Service Desk! " + emailAutomatico);
 					mensagem.setEmaildestino(destinatario);
-					mensagem.EnviarEmail();		
-					
-					FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Chamado número "+numero+", está em andamento"));
-					retorno = "listar";	
+					mensagem.EnviarEmail();
+
+					FacesContext.getCurrentInstance().addMessage(null,
+							new FacesMessage("Chamado nÃºmero " + numero + ", estÃ¡ em andamento"));
+					retorno = "listar";
 				}
 			}
-			
-			
+
 		} catch (Exception ex) {
 
 		}
 		return retorno;
 	}
-	
-	//Gerar PDF
+
 	public void preProcessPDF(Object document) throws IOException, BadElementException, DocumentException {
-	    //cria o documento
-	    Document pdf = (Document) document;        
-	    //seta a margin e página, precisa estar antes da abertura do documento, ou seja da linha: pdf.open()
-	    pdf.setMargins(5f, 5f, 5f, 5f);	    
-	    pdf.setPageSize(PageSize.LETTER);
-	    pdf.addTitle("Relatório de Chamados");
-	    pdf.open();
-	    //aqui pega o contexto para formar a url da imagem
-	    ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
-	    String logo = servletContext.getRealPath("") + File.separator + "resources/img" + File.separator + "LogoSGSD.png";
-	    //cria a imagem e passando a url
-	    Image image = Image.getInstance(logo);
-	    //alinha ao centro
-	    image.setAlignment(Image.ALIGN_CENTER);
-	    //adiciona a img ao pdf
-	    pdf.add(image);
-	    //adiciona um paragrafo ao pdf, alinha também ao centro
-	    Paragraph p = new Paragraph("Relatório de Chamados");
-	    p.setAlignment("center");
-	    pdf.add(p);
+
+		Document pdf = (Document) document;
+
+		pdf.setMargins(5f, 5f, 5f, 5f);
+		pdf.setPageSize(PageSize.LETTER);
+		pdf.addTitle("RelatÃ³rio de Chamados");
+		pdf.open();
+
+		ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext()
+				.getContext();
+		String logo = servletContext.getRealPath("") + File.separator + "resources/img" + File.separator
+				+ "LogoSGSD.png";
+
+		Image image = Image.getInstance(logo);
+
+		image.setAlignment(Image.ALIGN_CENTER);
+
+		pdf.add(image);
+
+		Paragraph p = new Paragraph("RelatÃ³rio de Chamados");
+		p.setAlignment("center");
+		pdf.add(p);
 	}
-	
-	
-	
-	
 
 }

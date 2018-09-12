@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
@@ -12,17 +12,18 @@ import javax.faces.model.ListDataModel;
 import br.net.hartwig.dao.EmailConfigDAO;
 import br.net.hartwig.model.EmailConfig;
 
-/**  
- * SGSD 2017
- * Author: Diego Michel Hartwig
+/**
+ * @author Diego Hartwig
+ * @since 1.0.2017
+ * @version 1.2.2017
  */
 @ManagedBean(name = "emailConfigBean")
-@SessionScoped
-public class EmailConfigBean  {	
+@RequestScoped
+public class EmailConfigBean {
 
-	private EmailConfig emailConfig = new EmailConfig();	
-	
-	private DataModel<EmailConfig> configs;	
+	private EmailConfig emailConfig = new EmailConfig();
+
+	private DataModel<EmailConfig> configs;
 
 	public void setConfigs(DataModel<EmailConfig> configs) {
 		this.configs = configs;
@@ -35,7 +36,7 @@ public class EmailConfigBean  {
 	public void setEmailConfig(EmailConfig emailConfig) {
 		this.emailConfig = emailConfig;
 	}
-	
+
 	public void selecionaEmailConfig() {
 		this.emailConfig = configs.getRowData();
 	}
@@ -44,28 +45,24 @@ public class EmailConfigBean  {
 
 		try {
 			EmailConfigDAO emailConfigDAO = new EmailConfigDAO();
-			
-			emailConfigDAO.Salvar(emailConfig);		
-			
-			
-			// Mensagem de confirmação após salvar
+
+			emailConfigDAO.salvar(emailConfig);
+
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Configurado com sucesso"));
 
 		} catch (Exception ex) {
 
 		}
 	}
-	
-	//Atualizar dados 
+
 	public String updateEmailConfig() {
 
 		String retorno = "erro";
 
 		try {
 			EmailConfigDAO emailConfigDAO = new EmailConfigDAO();
-			emailConfigDAO.Update(emailConfig);
-			
-			// Mensagem de confirmação após atualizar
+			emailConfigDAO.update(emailConfig);
+
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Dados atualizados com sucesso"));
 
 			retorno = "listar";
@@ -74,25 +71,23 @@ public class EmailConfigBean  {
 		}
 		return retorno;
 
-	}	
-	
-	// delete
+	}
+
 	public void deleteConfig() {
 		this.emailConfig = configs.getRowData();
 
 		try {
 			EmailConfigDAO emailConfigDao = new EmailConfigDAO();
-			
-			emailConfigDao.Delete(emailConfig);			
-			
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Usuario excluído com sucesso"));
-			
+
+			emailConfigDao.delete(emailConfig);
+
+			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("ConfiguraÃ§Ã£o deletada com sucesso"));
+
 		} catch (Exception ex) {
 
-		}		
+		}
 
 	}
-	
 
 	public DataModel<EmailConfig> getConfigs() {
 		EmailConfigDAO emailConfigDao = new EmailConfigDAO();
@@ -105,8 +100,5 @@ public class EmailConfigBean  {
 		}
 		return configs;
 	}
-
-
-
 
 }

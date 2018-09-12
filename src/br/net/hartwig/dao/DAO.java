@@ -6,11 +6,10 @@ import javax.persistence.Persistence;
 import org.hibernate.Session;
 import org.hibernate.ejb.EntityManagerImpl;
 
-//Classe principal do Hibernate
-//Utilizando EntityManager do JPA
-/**  
- * SGSD 2017
- * Author: Diego Michel Hartwig
+/**
+ * @author Diego Hartwig
+ * @since 1.0.2017
+ * @version 1.2.2017
  */
 public class DAO {
 
@@ -19,8 +18,7 @@ public class DAO {
 	public EntityManagerFactory getEntityManager() {
 
 		if (emf == null) {
-			// Ao se conectar irá procurar por uma conexão chamado SGSD que está
-			// no persistence.xml
+
 			emf = Persistence.createEntityManagerFactory("SGSD");
 
 		}

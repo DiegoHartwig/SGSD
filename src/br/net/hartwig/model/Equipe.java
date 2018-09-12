@@ -11,25 +11,26 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-/**  
- * SGSD 2017
- * Author: Diego Michel Hartwig
+/**
+ * @author Diego Hartwig
+ * @since 1.0.2017
+ * @version 1.2.2017
  */
 @Entity
-@Table(name="equipe")
-public class Equipe {	
-	
+@Table(name = "equipe")
+public class Equipe {
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id")
-	private int id;	
-	
-	@Column(name="descricao")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id")
+	private int id;
+
+	@Column(name = "descricao")
 	private String descricao;
-	
-	@OneToMany(mappedBy="equipe")
+
+	@OneToMany(mappedBy = "equipe")
 	private List<Tecnico> tecnicos;
-	
+
 	public int getId() {
 		return id;
 	}
@@ -44,8 +45,6 @@ public class Equipe {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
-	}	
-	
+	}
 
 }
-

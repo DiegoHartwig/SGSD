@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
@@ -13,14 +13,15 @@ import javax.faces.model.ListDataModel;
 import br.net.hartwig.dao.SetorDAO;
 import br.net.hartwig.model.Setor;
 
-/**  
- * SGSD 2017
- * Author: Diego Michel Hartwig
+/**
+ * @author Diego Hartwig
+ * @since 1.0.2017
+ * @version 1.2.2017
  */
 @ManagedBean(name = "setorBean")
-@SessionScoped
+@RequestScoped
 public class SetorBean implements Serializable {
-	
+
 	private static final long serialVersionUID = 8041504336070108898L;
 
 	private Setor setor = new Setor();
@@ -28,8 +29,7 @@ public class SetorBean implements Serializable {
 	private DataModel<Setor> setores;
 
 	private int usuario_id;
-	
-	//Variável que armazena o setor selecionado no dataTable
+
 	private Setor setorSelecionado;
 
 	public int getUsuario_id() {
@@ -50,7 +50,7 @@ public class SetorBean implements Serializable {
 
 	public void setSetor(Setor setor) {
 		this.setor = setor;
-	}	
+	}
 
 	public Setor getSetorSelecionado() {
 		return setorSelecionado;
@@ -72,44 +72,45 @@ public class SetorBean implements Serializable {
 
 		try {
 			SetorDAO dao = new SetorDAO();
-			
-			dao.Salvar(setor);
-			
+
+			dao.salvar(setor);
+
 			String descricao = setor.getDescricao();
-			
-			// Mensagem de confirmação após salvar
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Setor: "+descricao+", cadastrado com sucesso"));
+
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage("Setor: " + descricao + ", cadastrado com sucesso"));
 
 		} catch (Exception ex) {
 
 		}
 	}
-	
-	//Atualizar dados do setor
+
 	public String updateSetor() {
 
 		String retorno = "erro";
 
 		try {
 			SetorDAO dao = new SetorDAO();
-			dao.Update(setor);
-			
-			// Mensagem de confirmação após atualizar
+
+			dao.update(setor);
+
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Dados atualizados com sucesso"));
 
 			retorno = "listar";
+
 		} catch (Exception ex) {
 
 		}
 		return retorno;
 
-	}	
+	}
 
 	public DataModel<Setor> getSetores() {
+
 		SetorDAO dao = new SetorDAO();
 
 		try {
-			List<Setor> lista = dao.GetALL();
+			List<Setor> lista = dao.getAll();
 			setores = new ListDataModel<Setor>(lista);
 		} catch (Exception e) {
 

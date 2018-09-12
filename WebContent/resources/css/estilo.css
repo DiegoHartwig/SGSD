@@ -6,6 +6,33 @@
 	font-size: 10pt;
 }
 
+.cabecalho {
+	display: flex;
+	height: 40px;
+	background-color: #1e90ff;
+}
+
+.logo {
+	flex: 1;
+	flex-direction: row;
+	line-height: 40px;
+}
+
+.logo img {
+	width: 100px;
+	padding: 4px;
+}
+
+.logado {
+	flex-direction: row;
+	flex: 2;
+	font-weight: bold; text-align : right;
+	line-height: 36px;
+	padding: 4px;
+	color: #fff;
+	text-align: right;
+}
+
 .banner {
 	background-image: url('../img/banner.png') !important;
 	background-repeat: no-repeat;
@@ -52,25 +79,14 @@
 }
 
 .login {
-	font-size:20px;
-	text-align:left;
-	padding:1px;
+	font-size: 20px;
+	text-align: left;
+	padding: 1px;
 }
-
 
 .login h1 {
 	font-size: 20px;
 	color: #fff;
-}
-
-.cabecalho  {
-	width: 100%;
-	height: 60px;
-	background: #296ad4;
-	position: fixed;
-	top: 0;
-	right: 0;
-	left: 0;
 }
 
 .rodape {
@@ -78,15 +94,11 @@
 	height: 50px;
 	background: #296ad4;
 	position: absolute;
-	bottom: 0;	
-}
-.rodape p{
-	margin-top:5px;
+	bottom: 0;
 }
 
-.logo img {	
-	padding:6px;
-	float:left;
+.rodape p {
+	margin-top: 5px;
 }
 
 .menu {
@@ -94,14 +106,6 @@
 	height: 100%;
 	margin-left: 95%;
 	padding-top: 5px;
-}
-
-.logado {	
-	width: 120px;
-	height: 100%;
-	margin-left: 88%;
-	margin-top: -26px;
-	padding-bottom: 4px;
 }
 
 .rodape p {
@@ -118,25 +122,21 @@
 	color: #EF0D0D;
 }
 
-.menuPrincipal{
-	margin-left:200px;
-	width:60%;
-	
+.menuPrincipal {
+	margin-left: 200px;
+	width: 60%;
 }
 
-.ui-growl{
-    position:fixed;
-    top:50%;
-    right:50%;
-    width:301px;
+.ui-growl {
+	position: fixed;
+	top: 50%;
+	right: 50%;
+	width: 301px;
 }
 
-.pesquisa{
-	
-	width:600px;
-	height:500px;
-	margin-top:100px;
-	padding-left:50px;
+.pesquisa {
+	width: 600px;
+	height: 500px;
+	margin-top: 100px;
+	padding-left: 50px;
 }
-
-

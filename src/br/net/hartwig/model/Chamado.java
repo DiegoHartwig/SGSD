@@ -11,9 +11,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-/**  
- * SGSD 2017
- * Author: Diego Michel Hartwig
+/**
+ * @author Diego Hartwig
+ * @since 1.0.2017
+ * @version 1.2.2017
  */
 @Entity
 @Table(name = "chamado")
@@ -24,11 +25,11 @@ public class Chamado {
 	@Column(name = "id")
 	private int id;
 
-	@Column(name = "data_abertura")	
+	@Column(name = "data_abertura")
 	private Calendar data_abertura = Calendar.getInstance();
 
 	@Column(name = "data_encerramento")
-	private Calendar data_encerramento;	
+	private Calendar data_encerramento;
 
 	@Column(name = "titulo")
 	private String titulo;
@@ -51,12 +52,10 @@ public class Chamado {
 	@Column(name = "tipo")
 	private String tipo;
 
-	// relacionamento Muitos para Um com tabela usuario
 	@ManyToOne
-	@JoinColumn(name = "usu_id")	
+	@JoinColumn(name = "usu_id")
 	private Usuario usuario;
-	
-	//relacionamento Muitos para Um com tabela tecnico
+
 	@ManyToOne
 	@JoinColumn(name = "tec_id")
 	private Tecnico tecnico;
@@ -67,7 +66,7 @@ public class Chamado {
 
 	public void setId(int id) {
 		this.id = id;
-	}	
+	}
 
 	public Calendar getData_abertura() {
 		return data_abertura;
@@ -75,7 +74,7 @@ public class Chamado {
 
 	public void setData_abertura(Calendar data_abertura) {
 		this.data_abertura = data_abertura;
-	}	
+	}
 
 	public Calendar getData_encerramento() {
 		return data_encerramento;
@@ -155,7 +154,6 @@ public class Chamado {
 
 	public void setTecnico(Tecnico tecnico) {
 		this.tecnico = tecnico;
-	}	
+	}
 
-	
 }

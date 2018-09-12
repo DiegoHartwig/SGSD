@@ -5,30 +5,31 @@ import java.io.Serializable;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
+/**
+ * @author Diego Hartwig
+ * @since 1.0.2017
+ * @version 1.2.2017
+ */
 public class SessionUtil implements Serializable {
-	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 
-	public static HttpSession getSession(){
-		
+	public static HttpSession getSession() {
+
 		FacesContext ctx = FacesContext.getCurrentInstance();
-		HttpSession sessao = (HttpSession) ctx.getExternalContext().getSession(
-				false);
+		HttpSession sessao = (HttpSession) ctx.getExternalContext().getSession(false);
 		return sessao;
 	}
-	
-	public static void setParam(String key, Object value){
+
+	public static void setParam(String key, Object value) {
 		getSession().setAttribute(key, value);
 	}
-	
-	public static void remove(String key){
+
+	public static void remove(String key) {
 		getSession().removeAttribute(key);
 	}
-	
-	public static void invalidade(){
+
+	public static void invalidade() {
 		getSession().invalidate();
 	}
 

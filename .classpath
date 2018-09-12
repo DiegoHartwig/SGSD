@@ -73,6 +73,5 @@
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/standard.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/swtgraphics2d.jar"/>
 	<classpathentry kind="lib" path="WebContent/WEB-INF/lib/wsdl4j.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Hartwig/Documents/Git/SGSD/WebContent/WEB-INF/lib/activation.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>

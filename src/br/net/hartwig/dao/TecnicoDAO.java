@@ -8,137 +8,127 @@ import javax.persistence.Query;
 
 import br.net.hartwig.model.Tecnico;
 
-/**  
- * SGSD 2017
- * Author: Diego Michel Hartwig
+/**
+ * @author Diego Hartwig
+ * @since 1.0.2017
+ * @version 1.2.2017
  */
 public class TecnicoDAO extends DAO {
-	
-	//Método para salvar um Técnico 
-	public void Salvar(Tecnico tecnico){
-		//Conexão com o EntityManager
+
+	public void salvar(Tecnico tecnico) {
+
 		EntityManager em = getEntityManager().createEntityManager();
-		
-		try{
-			//Inicia a transação
+
+		try {
+
 			em.getTransaction().begin();
-			//Persistindo
+
 			em.persist(tecnico);
-			//Commit
+
 			em.getTransaction().commit();
-			//Fechando a conexão
+
 			em.close();
-			
-		} catch(Exception ex){
-			//Em caso de erro, rollback
+
+		} catch (Exception ex) {
+
 			em.getTransaction().rollback();
 		}
-		
+
 	}
-	
-	//Retorna um tecnico através do Id
-	public Tecnico Get(int tecnico_id){
-		//Conexão com o EntityManager
+
+	public Tecnico get(int tecnico_id) {
+
 		EntityManager em = getEntityManager().createEntityManager();
-		//Retorna um técnico	
-		return em.find(Tecnico.class, tecnico_id);			
-	}
-	
-	//Método para atualizar as informações de um técnico	
-		public void Update(Tecnico tecnico){
-			//Conexão com o EntityManager
-			EntityManager em = getEntityManager().createEntityManager();
-				
-			try{
-				//Inicia a transação
-				em.getTransaction().begin();
-				//Retorna um técnico através do argumento id 
-				Tecnico t = em.find(Tecnico.class, tecnico.getId());
-				//Setando as informações
-				t.setNome(tecnico.getNome());
-				t.setLogin(tecnico.getLogin());
-				t.setSenha(tecnico.getSenha());
-				t.setEmail(tecnico.getEmail());
-				t.setTelefone(tecnico.getTelefone());				
-				t.setProfissao(tecnico.getProfissao());
-				t.setObs(tecnico.getObs());
-				t.setEquipe(tecnico.getEquipe());
-				//Commit			
-				em.getTransaction().commit();
-				//Fechando a conexão
-				em.close();
-					
-			} catch(Exception ex){
-				//Em caso de erro, rollback
-				em.getTransaction().rollback();
-			}
-				
-		}	
-		
-		//Método para deletar um técnico
-		public void Delete(Tecnico tecnico){
-			//Conexão com o EntityManager
-			EntityManager em = getEntityManager().createEntityManager();
-				
-			try{
-				//Iniciando a transação
-				em.getTransaction().begin();
-				//recupera um técnico através do id
-				Tecnico t = em.find(Tecnico.class, tecnico.getId());
-				//remove tecnico				
-				em.remove(t);		
-				//commit
-				em.getTransaction().commit();
-				//Fecha a conexão
-				em.close();
-					
-			} catch(Exception ex){
-				//Em caso de erro, rollback
-				em.getTransaction().rollback();
-			}
-				
-		}
-		
-		//Método que retorna uma lista de Técnicos
-		@SuppressWarnings("unchecked")
-		public List<Tecnico> GetALL(){
-			//Conexão com o EntityManager
-			EntityManager em = getEntityManager().createEntityManager();
-			//Lista recebe null
-			List<Tecnico> lista = null;
-			
-			try{
-				//Query de consulta
-				Query q = em.createQuery("select object(t) from Tecnico as t");
-				//lista de técnicos
-				lista = q.getResultList();
-				
-			} catch(Exception ex){
-				//Fecha a conexão
-				em.close();
-			}
-			//Retorna uma lista de técnicos
-			return lista;
-		}	
-		
-		//Método de autenticação para logar no sistema como técnico
-		public Tecnico getAutenticaTecnico(String login, String senha){
-			EntityManager em = getEntityManager().createEntityManager();
-			try{
-				Tecnico tecnico = (Tecnico)em.createQuery("select t from Tecnico t where t.login = :login and t.senha = :senha")
-											.setParameter("login", login)
-											.setParameter("senha", senha).getSingleResult();
-				
-				return tecnico;
-				
-			} catch (NoResultException e) {
-				return null;
-						
-						
-			}
-		}
 
-		
+		return em.find(Tecnico.class, tecnico_id);
 	}
 
+	public void Update(Tecnico tecnico) {
 
+		EntityManager em = getEntityManager().createEntityManager();
+
+		try {
+
+			em.getTransaction().begin();
+
+			Tecnico t = em.find(Tecnico.class, tecnico.getId());
+
+			t.setNome(tecnico.getNome());
+			t.setLogin(tecnico.getLogin());
+			t.setSenha(tecnico.getSenha());
+			t.setEmail(tecnico.getEmail());
+			t.setTelefone(tecnico.getTelefone());
+			t.setProfissao(tecnico.getProfissao());
+			t.setObs(tecnico.getObs());
+			t.setEquipe(tecnico.getEquipe());
+
+			em.getTransaction().commit();
+
+			em.close();
+
+		} catch (Exception ex) {
+
+			em.getTransaction().rollback();
+		}
+
+	}
+
+	public void delete(Tecnico tecnico) {
+
+		EntityManager em = getEntityManager().createEntityManager();
+
+		try {
+
+			em.getTransaction().begin();
+
+			Tecnico t = em.find(Tecnico.class, tecnico.getId());
+
+			em.remove(t);
+
+			em.getTransaction().commit();
+
+			em.close();
+
+		} catch (Exception ex) {
+
+			em.getTransaction().rollback();
+		}
+
+	}
+
+	public List<Tecnico> getAll() {
+
+		EntityManager em = getEntityManager().createEntityManager();
+
+		List<Tecnico> lista = null;
+
+		try {
+
+			Query q = em.createQuery("select object(t) from Tecnico as t");
+
+			lista = q.getResultList();
+
+		} catch (Exception ex) {
+
+			em.close();
+		}
+
+		return lista;
+	}
+
+	public Tecnico getAutenticaTecnico(String login, String senha) {
+		EntityManager em = getEntityManager().createEntityManager();
+		try {
+			Tecnico tecnico = (Tecnico) em
+					.createQuery("select t from Tecnico t where t.login = :login and t.senha = :senha")
+					.setParameter("login", login).setParameter("senha", senha).getSingleResult();
+
+			return tecnico;
+
+		} catch (NoResultException e) {
+			return null;
+
+		}
+	}
+
+}

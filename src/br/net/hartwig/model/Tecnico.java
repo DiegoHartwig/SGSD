@@ -13,46 +13,47 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-/**  
- * SGSD 2017
- * Author: Diego Michel Hartwig
+/**
+ * @author Diego Hartwig
+ * @since 1.0.2017
+ * @version 1.2.2017
  */
 @Entity
-@Table(name="tecnico")
+@Table(name = "tecnico")
 public class Tecnico {
-	
+
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="id_tecnico")
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	@Column(name = "id_tecnico")
 	private int id;
-		
-	@Column(name="nome")
+
+	@Column(name = "nome")
 	private String nome;
-	
-	@Column(name="login")
+
+	@Column(name = "login")
 	private String login;
-	
-	@Column(name="senha")
+
+	@Column(name = "senha")
 	private String senha;
-	
-	@Column(name="email")
+
+	@Column(name = "email")
 	private String email;
-	
-	@Column(name="telefone")
-	private String telefone;	
-	
-	@Column(name="profissao")
+
+	@Column(name = "telefone")
+	private String telefone;
+
+	@Column(name = "profissao")
 	private String profissao;
-	
-	@Column(name="obs")
+
+	@Column(name = "obs")
 	private String obs;
-	
-	@OneToMany(mappedBy="tecnico")
+
+	@OneToMany(mappedBy = "tecnico")
 	private List<Chamado> chamados;
 
 	@ManyToOne
-	@JoinColumn(name="equipe_id")
-	private Equipe equipe;	
+	@JoinColumn(name = "equipe_id")
+	private Equipe equipe;
 
 	public int getId() {
 		return id;
@@ -68,7 +69,7 @@ public class Tecnico {
 
 	public void setNome(String nome) {
 		this.nome = nome;
-	}	
+	}
 
 	public String getLogin() {
 		return login;
@@ -108,7 +109,7 @@ public class Tecnico {
 
 	public void setProfissao(String profissao) {
 		this.profissao = profissao;
-	}	
+	}
 
 	public String getObs() {
 		return obs;
@@ -125,9 +126,5 @@ public class Tecnico {
 	public void setEquipe(Equipe equipe) {
 		this.equipe = equipe;
 	}
-	
-	
-		
+
 }
-
-

@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.model.DataModel;
 import javax.faces.model.ListDataModel;
@@ -14,14 +14,15 @@ import javax.faces.model.ListDataModel;
 import br.net.hartwig.dao.EquipeDAO;
 import br.net.hartwig.model.Equipe;
 
-/**  
- * SGSD 2017
- * Author: Diego Michel Hartwig
+/**
+ * @author Diego Hartwig
+ * @since 1.0.2017
+ * @version 1.2.2017
  */
 @ManagedBean(name = "equipeBean")
-@SessionScoped
-public class EquipeBean implements Serializable{
-	
+@RequestScoped
+public class EquipeBean implements Serializable {
+
 	private static final long serialVersionUID = 898756567772993466L;
 
 	private Equipe equipe = new Equipe();
@@ -29,8 +30,7 @@ public class EquipeBean implements Serializable{
 	private DataModel<Equipe> equipes;
 
 	private int usuario_id;
-	
-	//Variável que armazena a equipe selecionada no dataTable
+
 	private Equipe equipeSelecionada;
 
 	public int getUsuario_id() {
@@ -51,7 +51,7 @@ public class EquipeBean implements Serializable{
 
 	public void setEquipe(Equipe equipe) {
 		this.equipe = equipe;
-	}	
+	}
 
 	public Equipe getEquipeSelecionada() {
 		return equipeSelecionada;
@@ -71,8 +71,8 @@ public class EquipeBean implements Serializable{
 
 		try {
 			EquipeDAO dao = new EquipeDAO();
-			dao.Update(equipe);
-			// Mensagem de confirmação após atualizar
+			dao.update(equipe);
+
 			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Dados atualizados com sucesso"));
 
 			retorno = "listar";
@@ -91,13 +91,13 @@ public class EquipeBean implements Serializable{
 
 		try {
 			EquipeDAO dao = new EquipeDAO();
-			
-			dao.Salvar(equipe);
-			
+
+			dao.salvar(equipe);
+
 			String descricao = equipe.getDescricao();
 
-			// Mensagem de confirmação após salvar
-			FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Equipe: "+descricao+" cadastrada com sucesso"));
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage("Equipe: " + descricao + " cadastrada com sucesso"));
 
 		} catch (Exception ex) {
 
@@ -106,10 +106,11 @@ public class EquipeBean implements Serializable{
 	}
 
 	public DataModel<Equipe> getEquipes() {
+
 		EquipeDAO dao = new EquipeDAO();
 
 		try {
-			List<Equipe> lista = dao.GetALL();
+			List<Equipe> lista = dao.getAll();
 			equipes = new ListDataModel<Equipe>(lista);
 		} catch (Exception e) {
 

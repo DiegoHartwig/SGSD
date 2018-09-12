@@ -6,29 +6,29 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/** 
- * Classe configurações de parâmetros de autenticação de envio de email
- * SGSD 2017
- * Author: Diego Michel Hartwig
+/**
+ * @author Diego Hartwig
+ * @since 1.0.2017
+ * @version 1.2.2017
  */
 @Entity
-@Table(name="emailconfig")
+@Table(name = "emailconfig")
 public class EmailConfig {
-	
-	@Id	
-	@Column(name="id")
-	private int id;	
-	
-	@Column(name="email")
-	private String email;	
-	
-	@Column(name="senha")
+
+	@Id
+	@Column(name = "id")
+	private int id;
+
+	@Column(name = "email")
+	private String email;
+
+	@Column(name = "senha")
 	private String senha;
-	
-	@Column(name="porta")
+
+	@Column(name = "porta")
 	private int porta;
-	
-	@Column(name="smtp")
+
+	@Column(name = "smtp")
 	private String smtp;
 
 	public int getId() {
@@ -70,8 +70,5 @@ public class EmailConfig {
 	public void setSmtp(String smtp) {
 		this.smtp = smtp;
 	}
-	
-	
 
 }
-

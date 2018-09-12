@@ -1,148 +1,101 @@
 <!DOCTYPE html>
-
-<html xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition template="template/Layout.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-<h:head>
-	<title>Service Desk</title>
-	<h:outputStylesheet library="css" name="estilo.css" />
-</h:head>
-<h:body>
+	<ui:define name="corpo">
 
-	<!-- begin header -->
-	<div
-		style="width: 100%; line-height: 15px; background: #296ad4; color: #fff;">
-		<p:graphicImage name="/img/SGSD.png" style="width:120px; padding:5px;" />
-	</div>	
-	<!-- end header -->
+		<h:form id="frmNovoSetor" acceptcharset="ISO-8859-1">
 
-	<!-- begin menu -->
-	<h:form>
-		<p:menubar>
-			<p:menuitem value="Chamados" url="/restrito/chamados.xhtml"
-				icon="ui-icon-lightbulb" />
-			<p:menuitem value="Usuários" url="/restrito/usuarios.xhtml"
-				icon="	ui-icon-person" />
-			<p:menuitem value="Técnicos" url="/restrito/tecnicos.xhtml"
-				icon="ui-icon-wrench" />
-			<p:menuitem value="Setores" url="/restrito/setores.xhtml"
-				icon="ui-icon-home" />
-			<p:menuitem value="Equipes" url="/restrito/equipes.xhtml"
-				icon="ui-icon-contact" />
-			<p:menuitem value="Configurações" url="/restrito/config.xhtml"
-				icon="ui-icon-gear " />
-			<p:menuitem value="Avaliações" url="/restrito/avaliacoes.xhtml"
-				icon="ui-icon-clipboard" />
-			<p:menuitem value="Sair" action="#{tecBean.logout}"
-				icon="ui-icon-power" />			
-			<f:facet name="options">
-				<h:outputText value="Olá, " />
-				<h:outputText value="#{tecBean.usuarioLog}" />											
-			</f:facet>	
-		</p:menubar>
-	</h:form>
-	<!--end menu -->
+			<p:accordionPanel>
 
-	<!-- Loading -->
-	<p:ajaxStatus onstart="PF('statusDialog').show()"
-		onsuccess="PF('statusDialog').hide()" />
-	<p:dialog widgetVar="statusDialog" modal="true" draggable="false"
-		closable="false" resizable="false" showHeader="false">
-		<p:graphicImage name="/img/loader.gif" />
-	</p:dialog>
+				<p:tab title="Novo Setor">
 
-	<h:form id="frmNovoSetor" acceptcharset="ISO-8859-1">
+					<p:panel id="painelSetor">
 
-		<p:accordionPanel>
+						<p:focus context="painelSetor" />
 
-			<p:tab title="Novo Setor">
+						<p:messages id="messages" autoUpdate="true" closable="true" />
 
-				<p:panel id="painelSetor">
+						<p:panelGrid columns="6" styleClass="semBorda">
 
-					<p:focus context="painelSetor" />
+							<p:outputLabel value="Descrição:" for="descricao" />
+							<p:inputText id="descricao" value="#{setorBean.setor.descricao}"
+								placeholder="ex: Contabilidade" size="30" maxlength="30"
+								required="true" requiredMessage="Digite um nome para o setor!">
+								<f:validateLength minimum="2" maximum="30" />
+							</p:inputText>
 
-					<p:messages id="messages" autoUpdate="true" closable="true" />
+							<p:outputLabel />
 
-					<p:panelGrid columns="6" styleClass="semBorda">
+						</p:panelGrid>
 
-						<p:outputLabel value="Descrição:" for="descricao" />
-						<p:inputText id="descricao" value="#{setorBean.setor.descricao}"
-							placeholder="ex: Contabilidade" size="30" maxlength="30"
-							required="true" requiredMessage="Digite um nome para o setor!">
-							<f:validateLength minimum="2" maximum="30" />
-						</p:inputText>
+						<p:toolbar>
+							<p:toolbarGroup align="left">
+								<p:commandButton value="Salvar" icon="ui-icon-circle-check"
+									actionListener="#{setorBean.addSetor}" ajax="false" />
 
-						<p:outputLabel />
+								<p:commandButton value="Novo"
+									actionListener="#{setorBean.novoSetor}" ajax="false"
+									action="setores?faces-redirect=true" immediate="true"
+									icon="ui-icon-circle-plus" />
 
-					</p:panelGrid>
+							</p:toolbarGroup>
+						</p:toolbar>
+					</p:panel>
+				</p:tab>
+			</p:accordionPanel>
+		</h:form>
 
-					<p:toolbar>
-						<p:toolbarGroup align="left">
-							<p:commandButton value="Salvar" icon="ui-icon-circle-check"
-								actionListener="#{setorBean.addSetor}" ajax="false" />
+		<!-- begin form listar usuarios -->
+		<h:form>
+			<p:accordionPanel>
+				<p:tab title="Setores">
+					<p:panel id="painelSetores">
 
-							<p:commandButton value="Novo"
-								actionListener="#{setorBean.novoSetor}" ajax="false"
-								action="setores?faces-redirect=true" immediate="true"
-								icon="ui-icon-circle-plus" />
+						<p:dataTable id="listagem_setores" value="#{setorBean.setores}"
+							var="s" draggableColumns="true" style="margin-bottom:0"
+							paginator="true" rows="7"
+							paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+							rowsPerPageTemplate="7,10,15" paginatorPosition="bottom"
+							selection="#{setorBean.setorSelecionado}" selectionMode="single"
+							rowKey="#{s.id}" paginatorAlwaysVisible="true"
+							currentPageReportTemplate="{totalRecords} Setores Cadastrados"
+							emptyMessage="Nenhum setor cadastrado.">
 
-						</p:toolbarGroup>
-					</p:toolbar>
-				</p:panel>
-			</p:tab>
-		</p:accordionPanel>
-	</h:form>
+							<p:ajax event="rowSelect" />
 
-	<!-- begin form listar usuarios -->
-	<h:form>
-		<p:accordionPanel>
-			<p:tab title="Setores">
-				<p:panel id="painelSetores">
+							<p:column headerText="" style="width:26px;">
+								<p:commandButton icon="ui-icon-pencil" action="editar_setor"
+									actionListener="#{setorBean.selecionaSetor}"
+									style="width:25px;" />
+							</p:column>
 
-					<p:dataTable id="listagem_setores" value="#{setorBean.setores}"
-						var="s" draggableColumns="true" style="margin-bottom:0"
-						paginator="true" rows="7"
-						paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-						rowsPerPageTemplate="7,10,15" paginatorPosition="bottom"
-						selection="#{setorBean.setorSelecionado}"
-						selectionMode="single" rowKey="#{s.id}"
-						paginatorAlwaysVisible="true"
-						currentPageReportTemplate="{totalRecords} Setores Cadastrados" 
-						emptyMessage="Nenhum setor cadastrado.">
+							<p:column headerText="Código" style="width:40px;">
+								<h:outputText value="#{s.id}" />
+							</p:column>
+							<p:column headerText="Descrição">
+								<h:outputText value="#{s.descricao}" />
+							</p:column>
 
-						<p:ajax event="rowSelect" />
+						</p:dataTable>
 
-						<p:column headerText="" style="width:26px;">
-							<p:commandButton icon="ui-icon-pencil" action="editar_setor"
-								actionListener="#{setorBean.selecionaSetor}" style="width:25px;" />
-						</p:column>
+						<p:confirmDialog global="true" showEffect="fade"
+							hideEffect="explode">
+							<p:commandButton value="SIM" type="button"
+								styleClass="ui-confirmdialog-yes" icon="ui-icon-check"></p:commandButton>
+							<p:commandButton value="NÃO" type="button"
+								styleClass="ui-confirmdialog-no" icon="ui-icon-close"></p:commandButton>
+						</p:confirmDialog>
+					</p:panel>
+				</p:tab>
+			</p:accordionPanel>
 
-						<p:column headerText="Código" style="width:40px;">
-							<h:outputText value="#{s.id}" />
-						</p:column>
-						<p:column headerText="Descrição">
-							<h:outputText value="#{s.descricao}" />
-						</p:column>
+		</h:form>
 
-					</p:dataTable>
-
-					<p:confirmDialog global="true" showEffect="fade"
-						hideEffect="explode">
-						<p:commandButton value="SIM" type="button"
-							styleClass="ui-confirmdialog-yes" icon="ui-icon-check"></p:commandButton>
-						<p:commandButton value="NÃO" type="button"
-							styleClass="ui-confirmdialog-no" icon="ui-icon-close"></p:commandButton>
-					</p:confirmDialog>
-				</p:panel>
-			</p:tab>
-		</p:accordionPanel>
-
-	</h:form>
-
-</h:body>
-</html>
-
+	</ui:define>
+</ui:composition>
 

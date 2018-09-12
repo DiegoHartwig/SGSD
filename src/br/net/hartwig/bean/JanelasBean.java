@@ -3,20 +3,18 @@ package br.net.hartwig.bean;
 import java.util.HashMap;
 import java.util.Map;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.RequestScoped;
 import org.primefaces.context.RequestContext;
 
-/**  
- * SGSD 2017
- * Author: Diego Michel Hartwig
+/**
+ * @author Diego Hartwig
+ * @since 1.0.2017
+ * @version 1.2.2017
  */
 @ManagedBean(name = "janelaBean")
-@SessionScoped
+@RequestScoped
 public class JanelasBean {
 
-	// Métodos para abrir janelas dialog
-
-	// novo chamado
 	public void abrirNovoChamado() {
 		Map<String, Object> opcoes = new HashMap<String, Object>();
 		opcoes.put("modal", true);
@@ -27,7 +25,6 @@ public class JanelasBean {
 		RequestContext.getCurrentInstance().openDialog("novo_chamado", opcoes, null);
 	}
 
-	// editar chamado
 	public void abrirAtualizarChamado() {
 		Map<String, Object> opcoes = new HashMap<String, Object>();
 		opcoes.put("modal", true);
