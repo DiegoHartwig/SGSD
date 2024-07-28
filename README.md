@@ -1,7 +1,6 @@
 # Sistema de Gerenciamento de Service Desk - SGSD
 ### Uma Solução Web para o gerenciamento de uma Central de Serviços de TI.
-### Desenvolvido por: Diego Hartwig - 2017 - Curitiba - PR - Brasil
-## hartwig.diego@gmail.com
+### Desenvolvido por: Diego Hartwig - 2017 - Curitiba/PR
 
 ### Tecnologias: 
 * Java EE
